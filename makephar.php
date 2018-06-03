@@ -4,18 +4,15 @@
 // php.ini phar.readonly = 0
 
 // exclude patterns
-$exclude = [".DS_Store"];
+$exclude = [".DS_Store", ".git"];
 
 // autoload
 $index = "index.php";
 
-define("DIR", __DIR__);
-define("DS", DIRECTORY_SEPARATOR);
-
 // archive name & path
 
-$name = basename(DIR) . ".phar";
-$path = DIR.DS . $name;
+$name = basename(__DIR__) . ".phar";
+$path = __DIR__ . DIRECTORY_SEPARATOR . $name;
 
 // exclude self
 array_push($exclude, __FILE__);
@@ -28,7 +25,7 @@ $phar = new Phar($path);
 // recursive scan
 
 $iterator = new RecursiveIteratorIterator(
-	new RecursiveDirectoryIterator(DIR, FileSystemIterator::SKIP_DOTS)
+	new RecursiveDirectoryIterator(__DIR__, FileSystemIterator::SKIP_DOTS)
 );
 
 $include = iterator_to_array($iterator);
@@ -48,7 +45,7 @@ foreach($include as $file) echo $file . PHP_EOL;
 
 // build archive
 
-$phar->buildFromIterator(new ArrayIterator($include), DIR);
+$phar->buildFromIterator(new ArrayIterator($include), __DIR__);
 $phar->compressFiles(Phar::GZ);
 
 // set stub
