@@ -58,3 +58,6 @@ __HALT_COMPILER();
 EOT;
 
 $phar->setStub($stub);
+
+// sign archive
+$phar->setSignatureAlgorithm(Phar::SHA256);
