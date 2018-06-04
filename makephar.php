@@ -22,11 +22,11 @@ $path = __DIR__ . DIRECTORY_SEPARATOR . $name;
 
 // recursive scan
 
-$iterator = new RecursiveIteratorIterator(
+$include = new RecursiveIteratorIterator(
 	new RecursiveDirectoryIterator(__DIR__, FileSystemIterator::SKIP_DOTS)
 );
 
-$include = iterator_to_array($iterator);
+$include = iterator_to_array($include);
 
 // filter files
 
@@ -49,7 +49,9 @@ $phar->compressFiles(Phar::GZ);
 
 // set stub
 
-$stub = <<<"EOT"
+$stub = "#!/usr/bin/env php" . PHP_EOL;
+
+$stub .= <<<"EOT"
 <?php
 Phar::mapPhar(__FILE__);
 set_include_path("phar://" . __FILE__ . PATH_SEPARATOR . get_include_path());
@@ -61,3 +63,6 @@ $phar->setStub($stub);
 
 // sign archive
 $phar->setSignatureAlgorithm(Phar::SHA256);
+
+// executable bit
+system("chmod +x '$path'");
