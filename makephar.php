@@ -9,6 +9,8 @@ $index = "index.php";
 // exclude patterns
 $exclude = [".DS_Store", ".git"];
 
+system("clear");
+
 // exclude self
 array_push($exclude, __FILE__);
 
@@ -39,8 +41,7 @@ $include = array_filter($include, function($file) use ($exclude) {
 });
 
 // list files
-echo "[$name]" .PHP_EOL;
-foreach($include as $file) echo " + " . str_replace(__DIR__ . DIRECTORY_SEPARATOR, null, $file) . PHP_EOL;
+foreach($include as $file) echo "[$name] + " . str_replace(__DIR__ . DIRECTORY_SEPARATOR, null, $file) . PHP_EOL;
 
 // build archive
 
