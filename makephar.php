@@ -38,8 +38,9 @@ $include = array_filter($include, function($file) use ($exclude) {
 	return $valid;
 });
 
-// filtered files
-foreach($include as $file) echo $file . PHP_EOL;
+// list files
+echo "[$name]" .PHP_EOL;
+foreach($include as $file) echo " + " . str_replace(__DIR__ . DIRECTORY_SEPARATOR, null, $file) . PHP_EOL;
 
 // build archive
 
@@ -61,10 +62,10 @@ $stub = <<<END
 Phar::mapPhar(__FILE__);
 set_include_path("phar://" . __FILE__ . PATH_SEPARATOR . get_include_path());
 require_once("$index");
-__HALT_COMPILER();
+__HALT_COMPILER(); ?>
 END;
 
 $phar->setStub($stub);
 
-// executable bit
-system("chmod +x '$path'");
+// execute
+system("chmod +x '$path' && '$path'");
