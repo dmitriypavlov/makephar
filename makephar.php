@@ -47,22 +47,24 @@ $phar = new Phar($path);
 $phar->buildFromIterator(new ArrayIterator($include), __DIR__);
 $phar->compressFiles(Phar::GZ);
 
+// sign archive
+$phar->setSignatureAlgorithm(Phar::SHA256);
+$hash = $phar->getSignature()["hash"];
+
 // set stub
 
-$stub = "#!/usr/bin/env php" . PHP_EOL;
+$stub = <<<END
+#!/usr/bin/env php
 
-$stub .= <<<"EOT"
-<?php
+<?php # $hash #
+
 Phar::mapPhar(__FILE__);
 set_include_path("phar://" . __FILE__ . PATH_SEPARATOR . get_include_path());
 require_once("$index");
 __HALT_COMPILER();
-EOT;
+END;
 
 $phar->setStub($stub);
-
-// sign archive
-$phar->setSignatureAlgorithm(Phar::SHA256);
 
 // executable bit
 system("chmod +x '$path'");
